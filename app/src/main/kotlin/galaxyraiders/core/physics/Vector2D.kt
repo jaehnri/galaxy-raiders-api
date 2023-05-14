@@ -12,7 +12,7 @@ data class Vector2D(val dx: Double, val dy: Double) {
   }
 
   val magnitude: Double
-    get() =sqrt(dx * dx + dy * dy)
+    get() = sqrt(dx * dx + dy * dy)
 
   val radiant: Double
     get() = atan2(dy, dx)
@@ -26,7 +26,8 @@ data class Vector2D(val dx: Double, val dy: Double) {
   val normal: Vector2D
     get() = Vector2D(
       dy,
-      - dx).unit
+      - dx
+    ).unit
 
   operator fun times(scalar: Double): Vector2D {
     return Vector2D(
