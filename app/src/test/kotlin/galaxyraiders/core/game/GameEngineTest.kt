@@ -1,17 +1,18 @@
 package galaxyraiders.core.game
 
+import galaxyraiders.core.physics.Point2D
 import galaxyraiders.helpers.AverageValueGeneratorStub
 import galaxyraiders.helpers.ControllerSpy
 import galaxyraiders.helpers.MaxValueGeneratorStub
 import galaxyraiders.helpers.MinValueGeneratorStub
 import galaxyraiders.helpers.VisualizerSpy
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 
 @DisplayName("Given a game engine")
 class GameEngineTest {
@@ -21,41 +22,49 @@ class GameEngineTest {
   private val controllerSpy = ControllerSpy()
   private val visualizerSpy = VisualizerSpy()
 
-  private val normalGame = GameEngine(
-    generator = avgGenerator,
-    controller = controllerSpy,
-    visualizer = visualizerSpy,
-  )
+  private val normalGame =
+      GameEngine(
+          generator = avgGenerator,
+          controller = controllerSpy,
+          visualizer = visualizerSpy,
+      )
 
-  private val easyGame = GameEngine(
-    generator = maxGenerator,
-    controller = controllerSpy,
-    visualizer = visualizerSpy,
-  )
+  private val easyGame =
+      GameEngine(
+          generator = maxGenerator,
+          controller = controllerSpy,
+          visualizer = visualizerSpy,
+      )
 
-  private val hardGame = GameEngine(
-    generator = minGenerator,
-    controller = controllerSpy,
-    visualizer = visualizerSpy,
-  )
+  private val hardGame =
+      GameEngine(
+          generator = minGenerator,
+          controller = controllerSpy,
+          visualizer = visualizerSpy,
+      )
 
   @Test
   fun `it has its parameters initialized correctly `() {
     assertAll(
-      "GameEngine should initialize all its parameters correctly",
-      { assertNotNull(normalGame) },
-      { assertEquals(avgGenerator, normalGame.generator,) },
-      { assertEquals(controllerSpy, normalGame.controller) },
-      { assertEquals(visualizerSpy, normalGame.visualizer) },
+        "GameEngine should initialize all its parameters correctly",
+        { assertNotNull(normalGame) },
+        {
+          assertEquals(
+              avgGenerator,
+              normalGame.generator,
+          )
+        },
+        { assertEquals(controllerSpy, normalGame.controller) },
+        { assertEquals(visualizerSpy, normalGame.visualizer) },
     )
   }
 
   @Test
   fun `it creates a SpaceField injecting its generator `() {
     assertAll(
-      "GameEngine should create a field correctly",
-      { assertNotNull(normalGame.field) },
-      { assertEquals(normalGame.generator, normalGame.field.generator) },
+        "GameEngine should create a field correctly",
+        { assertNotNull(normalGame.field) },
+        { assertEquals(normalGame.generator, normalGame.field.generator) },
     )
   }
 
@@ -78,9 +87,7 @@ class GameEngineTest {
     val numPlayerCommands = controllerSpy.playerCommands.size
 
     // Process all available user commands
-    repeat(numPlayerCommands) {
-      normalGame.processPlayerInput()
-    }
+    repeat(numPlayerCommands) { normalGame.processPlayerInput() }
 
     // Should receive a null
     normalGame.processPlayerInput()
@@ -114,15 +121,25 @@ class GameEngineTest {
     hardGame.generateAsteroids()
     hardGame.generateAsteroids()
 
-    val asteroidsInitialVelocity =
-      hardGame.field.asteroids.map { it.velocity }
+    val asteroidsInitialVelocity = hardGame.field.asteroids.map { it.velocity }
 
     hardGame.handleCollisions()
 
-    val asteroidsFinalVelocity =
-      hardGame.field.asteroids.map { it.velocity }
+    val asteroidsFinalVelocity = hardGame.field.asteroids.map { it.velocity }
 
     assertNotEquals(asteroidsInitialVelocity, asteroidsFinalVelocity)
+  }
+
+  @Test
+  fun `it generates an explosion when a missile collides with an asteroid`() {
+    hardGame.generateAsteroids()
+
+    val asteroid = hardGame.field.asteroids.last()
+    hardGame.field.generateMissile(Point2D(asteroid.center.x, asteroid.center.y))
+
+    hardGame.handleCollisions()
+
+    assertEquals(1, hardGame.field.explosions.size)
   }
 
   @Test
@@ -143,10 +160,10 @@ class GameEngineTest {
     hardGame.moveSpaceObjects()
 
     assertAll(
-      "GameEngine should move all space objects",
-      { assertEquals(expectedShipPosition, ship.center) },
-      { assertEquals(expectedAsteroidPosition, asteroid.center) },
-      { assertEquals(expectedMissilePosition, missile.center) },
+        "GameEngine should move all space objects",
+        { assertEquals(expectedShipPosition, ship.center) },
+        { assertEquals(expectedAsteroidPosition, asteroid.center) },
+        { assertEquals(expectedMissilePosition, missile.center) },
     )
   }
 
@@ -156,35 +173,44 @@ class GameEngineTest {
     hardGame.field.generateMissile()
 
     val missile = hardGame.field.missiles.last()
-    val missileDistanceToTopBorder =
-      hardGame.field.boundaryY.endInclusive - missile.center.y
-    val repetitionsToGetMissileOutOfSpaceField = Math.ceil(
-      missileDistanceToTopBorder / Math.abs(missile.velocity.dy)
-    ).toInt()
+    val missileDistanceToTopBorder = hardGame.field.boundaryY.endInclusive - missile.center.y
+    val repetitionsToGetMissileOutOfSpaceField =
+        Math.ceil(missileDistanceToTopBorder / Math.abs(missile.velocity.dy)).toInt()
 
     val asteroid = hardGame.field.asteroids.last()
-    val asteroidDistanceToBottomBorder =
-      asteroid.center.y - hardGame.field.boundaryY.start
-    val repetitionsToGetAsteroidOutsideOfSpaceField = Math.ceil(
-      asteroidDistanceToBottomBorder / Math.abs(asteroid.velocity.dy)
-    ).toInt()
+    val asteroidDistanceToBottomBorder = asteroid.center.y - hardGame.field.boundaryY.start
+    val repetitionsToGetAsteroidOutsideOfSpaceField =
+        Math.ceil(asteroidDistanceToBottomBorder / Math.abs(asteroid.velocity.dy)).toInt()
 
-    val repetitionsToGetSpaceObjectsOutOfSpaceField = Math.max(
-      repetitionsToGetMissileOutOfSpaceField,
-      repetitionsToGetAsteroidOutsideOfSpaceField,
-    )
+    val repetitionsToGetSpaceObjectsOutOfSpaceField =
+        Math.max(
+            repetitionsToGetMissileOutOfSpaceField,
+            repetitionsToGetAsteroidOutsideOfSpaceField,
+        )
 
-    repeat(repetitionsToGetSpaceObjectsOutOfSpaceField) {
-      hardGame.moveSpaceObjects()
-    }
+    repeat(repetitionsToGetSpaceObjectsOutOfSpaceField) { hardGame.moveSpaceObjects() }
 
     hardGame.trimSpaceObjects()
 
     assertAll(
-      "GameEngine should trim all space objects",
-      { assertEquals(-1, hardGame.field.missiles.indexOf(missile)) },
-      { assertEquals(-1, hardGame.field.asteroids.indexOf(asteroid)) },
+        "GameEngine should trim all space objects",
+        { assertEquals(-1, hardGame.field.missiles.indexOf(missile)) },
+        { assertEquals(-1, hardGame.field.asteroids.indexOf(asteroid)) },
     )
+  }
+
+  @Test
+  fun `it can trim its explosions`() {
+
+    hardGame.field.generateExplosion(Point2D(1.0, 1.0))
+
+    val explosion = hardGame.field.explosions.last()
+
+    val repetitionsToGetExplosionOutOfSpaceField = 86
+    repeat(repetitionsToGetExplosionOutOfSpaceField) { hardGame.field.incrementExplosionsLife() }
+
+    hardGame.trimSpaceObjects()
+    assertEquals(-1, hardGame.field.explosions.indexOf(explosion))
   }
 
   @Test
@@ -212,10 +238,10 @@ class GameEngineTest {
     hardGame.tick()
 
     assertAll(
-      "GameEngine should process input, update and render",
-      { assertEquals(numPlayerCommands - 1, controllerSpy.playerCommands.size) },
-      { assertEquals(numAsteroids + 1, hardGame.field.asteroids.size) },
-      { assertEquals(numRenders + 1, visualizerSpy.numRenders) },
+        "GameEngine should process input, update and render",
+        { assertEquals(numPlayerCommands - 1, controllerSpy.playerCommands.size) },
+        { assertEquals(numAsteroids + 1, hardGame.field.asteroids.size) },
+        { assertEquals(numRenders + 1, visualizerSpy.numRenders) },
     )
   }
 
@@ -231,10 +257,10 @@ class GameEngineTest {
     val expectedNumRenders = numRenders + numPlayerCommands
 
     assertAll(
-      "GameEngine should process input, update and render",
-      { assertEquals(0, controllerSpy.playerCommands.size) },
-      { assertEquals(expectedNumRenders, visualizerSpy.numRenders) },
-      { assertTrue(hardGame.field.asteroids.size <= numPlayerCommands - 1) },
+        "GameEngine should process input, update and render",
+        { assertEquals(0, controllerSpy.playerCommands.size) },
+        { assertEquals(expectedNumRenders, visualizerSpy.numRenders) },
+        { assertTrue(hardGame.field.asteroids.size <= numPlayerCommands - 1) },
     )
   }
 }

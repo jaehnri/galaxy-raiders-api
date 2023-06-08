@@ -23,15 +23,16 @@ object GameEngineConfig {
 
 @Suppress("TooManyFunctions")
 class GameEngine(
-  val generator: RandomGenerator,
-  val controller: Controller,
-  val visualizer: Visualizer,
+    val generator: RandomGenerator,
+    val controller: Controller,
+    val visualizer: Visualizer,
 ) {
-  val field = SpaceField(
-    width = GameEngineConfig.spaceFieldWidth,
-    height = GameEngineConfig.spaceFieldHeight,
-    generator = generator
-  )
+  val field =
+      SpaceField(
+          width = GameEngineConfig.spaceFieldWidth,
+          height = GameEngineConfig.spaceFieldHeight,
+          generator = generator
+      )
 
   var playing = true
 
@@ -39,16 +40,12 @@ class GameEngine(
     while (true) {
       val duration = measureTimeMillis { this.tick() }
 
-      Thread.sleep(
-        maxOf(0, GameEngineConfig.msPerFrame - duration)
-      )
+      Thread.sleep(maxOf(0, GameEngineConfig.msPerFrame - duration))
     }
   }
 
   fun execute(maxIterations: Int) {
-    repeat(maxIterations) {
-      this.tick()
-    }
+    repeat(maxIterations) { this.tick() }
   }
 
   fun tick() {
@@ -60,18 +57,12 @@ class GameEngine(
   fun processPlayerInput() {
     this.controller.nextPlayerCommand()?.also {
       when (it) {
-        PlayerCommand.MOVE_SHIP_UP ->
-          this.field.ship.boostUp()
-        PlayerCommand.MOVE_SHIP_DOWN ->
-          this.field.ship.boostDown()
-        PlayerCommand.MOVE_SHIP_LEFT ->
-          this.field.ship.boostLeft()
-        PlayerCommand.MOVE_SHIP_RIGHT ->
-          this.field.ship.boostRight()
-        PlayerCommand.LAUNCH_MISSILE ->
-          this.field.generateMissile()
-        PlayerCommand.PAUSE_GAME ->
-          this.playing = !this.playing
+        PlayerCommand.MOVE_SHIP_UP -> this.field.ship.boostUp()
+        PlayerCommand.MOVE_SHIP_DOWN -> this.field.ship.boostDown()
+        PlayerCommand.MOVE_SHIP_LEFT -> this.field.ship.boostLeft()
+        PlayerCommand.MOVE_SHIP_RIGHT -> this.field.ship.boostRight()
+        PlayerCommand.LAUNCH_MISSILE -> this.field.generateMissile()
+        PlayerCommand.PAUSE_GAME -> this.playing = !this.playing
       }
     }
   }
@@ -85,10 +76,17 @@ class GameEngine(
   }
 
   fun handleCollisions() {
-    this.field.spaceObjects.forEachPair {
-        (first, second) ->
+    this.field.spaceObjects.forEachPair { (first, second) ->
+
+      // If first object is a Missile and second is an Asteroid an Explosion should be generated
       if (first.impacts(second)) {
-        first.collideWith(second, GameEngineConfig.coefficientRestitution)
+        if (first.symbol == '^' && second.symbol == '.') {
+          this.field.generateExplosion(second.center)
+        } else if (first.symbol == '.' && second.symbol == '^') {
+          this.field.generateExplosion(first.center)
+        } else {
+          first.collideWith(second, GameEngineConfig.coefficientRestitution)
+        }
       }
     }
   }
@@ -102,6 +100,8 @@ class GameEngine(
   fun trimSpaceObjects() {
     this.field.trimAsteroids()
     this.field.trimMissiles()
+    this.field.trimExplosions()
+    this.field.incrementExplosionsLife()
   }
 
   fun generateAsteroids() {
