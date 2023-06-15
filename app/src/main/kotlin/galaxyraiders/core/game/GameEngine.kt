@@ -80,10 +80,10 @@ class GameEngine(
 
       // If first object is a Missile and second is an Asteroid an Explosion should be generated
       if (first.impacts(second)) {
-        if (first.symbol == '^' && second.symbol == '.') {
+        if ((first.symbol == '^' && second.symbol == '.') ||
+                (first.symbol == '.' && second.symbol == '^')
+        ) {
           this.field.generateExplosion(second.center)
-        } else if (first.symbol == '.' && second.symbol == '^') {
-          this.field.generateExplosion(first.center)
         } else {
           first.collideWith(second, GameEngineConfig.coefficientRestitution)
         }
