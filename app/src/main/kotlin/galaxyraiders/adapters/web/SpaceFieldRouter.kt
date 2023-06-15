@@ -1,6 +1,7 @@
 package galaxyraiders.adapters.web
 
 import galaxyraiders.core.game.Asteroid
+import galaxyraiders.core.game.Explosion
 import galaxyraiders.core.game.Missile
 import galaxyraiders.core.game.SpaceField
 import galaxyraiders.core.game.SpaceShip
@@ -11,9 +12,10 @@ import io.javalin.http.Context
 
 class SpaceFieldRouter : Router, Visualizer {
   data class SpaceFieldDTO(
-    val ship: SpaceShip,
-    val asteroids: List<Asteroid>,
-    val missiles: List<Missile>,
+      val ship: SpaceShip,
+      val asteroids: List<Asteroid>,
+      val missiles: List<Missile>,
+      val explosions: List<Explosion>,
   )
 
   var dto: SpaceFieldDTO? = null
@@ -21,19 +23,19 @@ class SpaceFieldRouter : Router, Visualizer {
 
   override val path = "/space-field"
 
-  override val endpoints = EndpointGroup {
-    get("/", ::getSpaceField)
-  }
+  override val endpoints = EndpointGroup { get("/", ::getSpaceField) }
 
   private fun getSpaceField(ctx: Context) {
     ctx.json(this.dto ?: "{}")
   }
 
   override fun renderSpaceField(field: SpaceField) {
-    this.dto = SpaceFieldDTO(
-      ship = field.ship,
-      asteroids = field.asteroids,
-      missiles = field.missiles,
-    )
+    this.dto =
+        SpaceFieldDTO(
+            ship = field.ship,
+            asteroids = field.asteroids,
+            missiles = field.missiles,
+            explosions = field.explosions,
+        )
   }
 }
