@@ -370,8 +370,6 @@ class SpaceFieldTest {
 
     repeat(repetitionsToGetExplosionOutOfSpaceField) { spaceField.incrementExplosionsLife() }
 
-    explosion.life = 86
-
     spaceField.trimExplosions()
 
     assertEquals(-1, spaceField.explosions.indexOf(explosion))
