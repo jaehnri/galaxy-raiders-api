@@ -7,91 +7,91 @@ import galaxyraiders.helpers.DELTA
 import galaxyraiders.helpers.getMinMaxAverageValueGeneratorStubs
 import galaxyraiders.helpers.toStreamOfArguments
 import galaxyraiders.ports.RandomGenerator
-import java.util.stream.Stream
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @DisplayName("Given a space field")
 class SpaceFieldTest {
   private val generator: RandomGenerator = AverageValueGeneratorStub()
 
   private val spaceField =
-      SpaceField(
-          width = 12,
-          height = 8,
-          generator = generator,
-      )
+    SpaceField(
+      width = 12,
+      height = 8,
+      generator = generator,
+    )
 
   @Test
   fun `it has its parameters initialized correctly`() {
     assertAll(
-        "SpaceField should initialize all initial parameters correctly",
-        { assertNotNull(spaceField) },
-        { assertEquals(12, spaceField.width) },
-        { assertEquals(8, spaceField.height) },
-        { assertEquals(generator, spaceField.generator) },
+      "SpaceField should initialize all initial parameters correctly",
+      { assertNotNull(spaceField) },
+      { assertEquals(12, spaceField.width) },
+      { assertEquals(8, spaceField.height) },
+      { assertEquals(generator, spaceField.generator) },
     )
   }
 
   @Test
   fun `it defines its boundaries`() {
     assertAll(
-        "SpaceField should initialize all initial parameters correctly",
-        { assertNotNull(spaceField) },
-        { assertEquals(0.0..12.0, spaceField.boundaryX) },
-        { assertEquals(0.0..8.0, spaceField.boundaryY) },
+      "SpaceField should initialize all initial parameters correctly",
+      { assertNotNull(spaceField) },
+      { assertEquals(0.0..12.0, spaceField.boundaryX) },
+      { assertEquals(0.0..8.0, spaceField.boundaryY) },
     )
   }
 
   @Test
   fun `it initializes the player's SpaceShip`() {
     assertAll(
-        "SpaceField should initialize a ship with standard parameters",
-        { assertNotNull(spaceField.ship) },
-        { assertEquals(Point2D(6.0, 1.0), spaceField.ship.center) },
-        {
-          assertEquals(
-              Vector2D(0.0, 0.0),
-              spaceField.ship.velocity,
-          )
-        },
-        { assertEquals(1.0, spaceField.ship.radius) },
-        { assertEquals(10.0, spaceField.ship.mass) },
+      "SpaceField should initialize a ship with standard parameters",
+      { assertNotNull(spaceField.ship) },
+      { assertEquals(Point2D(6.0, 1.0), spaceField.ship.center) },
+      {
+        assertEquals(
+          Vector2D(0.0, 0.0),
+          spaceField.ship.velocity,
+        )
+      },
+      { assertEquals(1.0, spaceField.ship.radius) },
+      { assertEquals(10.0, spaceField.ship.mass) },
     )
   }
 
   @Test
   fun `it starts with no asteroids`() {
     assertAll(
-        "SpaceField should initialize an empty list of asteroids",
-        { assertNotNull(spaceField.asteroids) },
-        { assertEquals(0, spaceField.asteroids.size) },
+      "SpaceField should initialize an empty list of asteroids",
+      { assertNotNull(spaceField.asteroids) },
+      { assertEquals(0, spaceField.asteroids.size) },
     )
   }
 
   @Test
   fun `it starts with no explosions`() {
     assertAll(
-        "SpaceField should initialize an empty list of explosions",
-        { assertNotNull(spaceField.explosions) },
-        { assertEquals(0, spaceField.explosions.size) },
+      "SpaceField should initialize an empty list of explosions",
+      { assertNotNull(spaceField.explosions) },
+      { assertEquals(0, spaceField.explosions.size) },
     )
   }
 
   @Test
   fun `it starts with no missiles`() {
     assertAll(
-        "SpaceField should initialize an empty list of missiles",
-        { assertNotNull(spaceField.missiles) },
-        { assertEquals(0, spaceField.missiles.size) },
+      "SpaceField should initialize an empty list of missiles",
+      { assertNotNull(spaceField.missiles) },
+      { assertEquals(0, spaceField.missiles.size) },
     )
   }
 
@@ -131,15 +131,15 @@ class SpaceFieldTest {
     repeat(10) { ship.boostUp() }
 
     val expectedShipPosition =
-        Point2D(
-            x = ship.center.x,
-            y = spaceField.boundaryY.endInclusive,
-        )
+      Point2D(
+        x = ship.center.x,
+        y = spaceField.boundaryY.endInclusive,
+      )
 
     val distanceToTopBorder = spaceField.boundaryY.endInclusive - ship.center.y
 
     val repetitionsToGetOutOfMap =
-        Math.ceil(distanceToTopBorder / Math.abs(ship.velocity.dy)).toInt()
+      Math.ceil(distanceToTopBorder / Math.abs(ship.velocity.dy)).toInt()
 
     repeat(repetitionsToGetOutOfMap) { spaceField.moveShip() }
 
@@ -152,15 +152,15 @@ class SpaceFieldTest {
     repeat(10) { ship.boostDown() }
 
     val expectedShipPosition =
-        Point2D(
-            x = ship.center.x,
-            y = spaceField.boundaryY.start,
-        )
+      Point2D(
+        x = ship.center.x,
+        y = spaceField.boundaryY.start,
+      )
 
     val distanceToBottomBorder = ship.center.y - spaceField.boundaryY.start
 
     val repetitionsToGetOutOfMap =
-        Math.ceil(distanceToBottomBorder / Math.abs(ship.velocity.dy)).toInt()
+      Math.ceil(distanceToBottomBorder / Math.abs(ship.velocity.dy)).toInt()
 
     repeat(repetitionsToGetOutOfMap) { spaceField.moveShip() }
 
@@ -173,15 +173,15 @@ class SpaceFieldTest {
     repeat(10) { ship.boostRight() }
 
     val expectedShipPosition =
-        Point2D(
-            x = spaceField.boundaryX.endInclusive,
-            y = ship.center.y,
-        )
+      Point2D(
+        x = spaceField.boundaryX.endInclusive,
+        y = ship.center.y,
+      )
 
     val distanceToRightBorder = spaceField.boundaryX.endInclusive - ship.center.x
 
     val repetitionsToGetOutOfMap =
-        Math.ceil(distanceToRightBorder / Math.abs(ship.velocity.dx)).toInt()
+      Math.ceil(distanceToRightBorder / Math.abs(ship.velocity.dx)).toInt()
 
     repeat(repetitionsToGetOutOfMap) { spaceField.moveShip() }
 
@@ -194,15 +194,15 @@ class SpaceFieldTest {
     repeat(10) { ship.boostLeft() }
 
     val expectedShipPosition =
-        Point2D(
-            x = spaceField.boundaryX.start,
-            y = ship.center.y,
-        )
+      Point2D(
+        x = spaceField.boundaryX.start,
+        y = ship.center.y,
+      )
 
     val distanceToLeftBorder = ship.center.x - spaceField.boundaryX.start
 
     val repetitionsToGetOutOfMap =
-        Math.ceil(distanceToLeftBorder / Math.abs(ship.velocity.dx)).toInt()
+      Math.ceil(distanceToLeftBorder / Math.abs(ship.velocity.dx)).toInt()
 
     repeat(repetitionsToGetOutOfMap) { spaceField.moveShip() }
 
@@ -249,11 +249,11 @@ class SpaceFieldTest {
     val missile = spaceField.missiles.last()
 
     assertAll(
-        "SpaceField creates a new missile with restrictions",
-        { assertEquals(ship.center.x, missile.center.x, DELTA) },
-        {
-          assertEquals(ship.center.y + ship.radius + missile.radius + 0.1, missile.center.y, DELTA)
-        },
+      "SpaceField creates a new missile with restrictions",
+      { assertEquals(ship.center.x, missile.center.x, DELTA) },
+      {
+        assertEquals(ship.center.y + ship.radius + missile.radius + 0.1, missile.center.y, DELTA)
+      },
     )
   }
 
@@ -264,9 +264,9 @@ class SpaceFieldTest {
     val missile = spaceField.missiles.last()
 
     assertAll(
-        "SpaceField creates a new missile with restrictions",
-        { assertEquals(0.0, missile.velocity.dx, DELTA) },
-        { assertEquals(1.0, missile.velocity.dy, DELTA) },
+      "SpaceField creates a new missile with restrictions",
+      { assertEquals(0.0, missile.velocity.dx, DELTA) },
+      { assertEquals(1.0, missile.velocity.dy, DELTA) },
     )
   }
 
@@ -289,16 +289,16 @@ class SpaceFieldTest {
   @ParameterizedTest(name = "({0})")
   @MethodSource("provideSpaceFieldWithCornerCaseGeneratorArguments")
   fun `it generates a new asteroid in a random horizontal position at the top of the field `(
-      spaceField: SpaceField
+    spaceField: SpaceField
   ) {
     spaceField.generateAsteroid()
     val asteroid = spaceField.asteroids.last()
 
     assertAll(
-        "SpaceField creates a new asteroid with restrictions",
-        { assertTrue(asteroid.center.x >= 0.0) },
-        { assertTrue(asteroid.center.x <= spaceField.width) },
-        { assertEquals(asteroid.center.y, spaceField.height.toDouble(), DELTA) },
+      "SpaceField creates a new asteroid with restrictions",
+      { assertTrue(asteroid.center.x >= 0.0) },
+      { assertTrue(asteroid.center.x <= spaceField.width) },
+      { assertEquals(asteroid.center.y, spaceField.height.toDouble(), DELTA) },
     )
   }
 
@@ -309,11 +309,11 @@ class SpaceFieldTest {
     val asteroid = spaceField.asteroids.last()
 
     assertAll(
-        "SpaceField creates a new asteroid with restrictions",
-        { assertTrue(asteroid.velocity.dx >= -0.5) },
-        { assertTrue(asteroid.velocity.dx <= 0.5) },
-        { assertTrue(asteroid.velocity.dy >= -2.0) },
-        { assertTrue(asteroid.velocity.dy <= -1.0) },
+      "SpaceField creates a new asteroid with restrictions",
+      { assertTrue(asteroid.velocity.dx >= -0.5) },
+      { assertTrue(asteroid.velocity.dx <= 0.5) },
+      { assertTrue(asteroid.velocity.dy >= -2.0) },
+      { assertTrue(asteroid.velocity.dy <= -1.0) },
     )
   }
 
@@ -324,9 +324,9 @@ class SpaceFieldTest {
     val asteroid = spaceField.asteroids.last()
 
     assertAll(
-        "SpaceField creates a new asteroid with restrictions",
-        { assertTrue(asteroid.radius >= 0.5) },
-        { assertTrue(asteroid.radius <= 2.0) },
+      "SpaceField creates a new asteroid with restrictions",
+      { assertTrue(asteroid.radius >= 0.5) },
+      { assertTrue(asteroid.radius <= 2.0) },
     )
   }
 
@@ -337,9 +337,9 @@ class SpaceFieldTest {
     val asteroid = spaceField.asteroids.last()
 
     assertAll(
-        "SpaceField creates a new asteroid with restrictions",
-        { assertTrue(asteroid.mass >= 500) },
-        { assertTrue(asteroid.mass <= 1000) },
+      "SpaceField creates a new asteroid with restrictions",
+      { assertTrue(asteroid.mass >= 500) },
+      { assertTrue(asteroid.mass <= 1000) },
     )
   }
 
@@ -351,7 +351,7 @@ class SpaceFieldTest {
 
     val distanceToTopBorder = spaceField.boundaryY.endInclusive - missile.center.y
     val repetitionsToGetOutSpaceField =
-        Math.ceil(distanceToTopBorder / Math.abs(missile.velocity.dy)).toInt()
+      Math.ceil(distanceToTopBorder / Math.abs(missile.velocity.dy)).toInt()
 
     repeat(repetitionsToGetOutSpaceField) { missile.move() }
 
@@ -396,7 +396,7 @@ class SpaceFieldTest {
 
     val distanceToBottomBorder = asteroid.center.y - spaceField.boundaryY.start
     val repetitionsToGetOutSpaceField =
-        Math.ceil(distanceToBottomBorder / Math.abs(asteroid.velocity.dy)).toInt()
+      Math.ceil(distanceToBottomBorder / Math.abs(asteroid.velocity.dy)).toInt()
 
     repeat(repetitionsToGetOutSpaceField) { asteroid.move() }
 
@@ -422,8 +422,8 @@ class SpaceFieldTest {
     @JvmStatic
     fun provideSpaceFieldWithCornerCaseGeneratorArguments(): Stream<Arguments> {
       return getMinMaxAverageValueGeneratorStubs()
-          .map({ generator -> SpaceField(width = 12, height = 8, generator = generator) })
-          .toStreamOfArguments()
+        .map({ generator -> SpaceField(width = 12, height = 8, generator = generator) })
+        .toStreamOfArguments()
     }
   }
 }
