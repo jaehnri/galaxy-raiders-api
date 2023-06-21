@@ -23,16 +23,16 @@ object GameEngineConfig {
 
 @Suppress("TooManyFunctions")
 class GameEngine(
-    val generator: RandomGenerator,
-    val controller: Controller,
-    val visualizer: Visualizer,
+  val generator: RandomGenerator,
+  val controller: Controller,
+  val visualizer: Visualizer,
 ) {
   val field =
-      SpaceField(
-          width = GameEngineConfig.spaceFieldWidth,
-          height = GameEngineConfig.spaceFieldHeight,
-          generator = generator
-      )
+    SpaceField(
+      width = GameEngineConfig.spaceFieldWidth,
+      height = GameEngineConfig.spaceFieldHeight,
+      generator = generator
+    )
 
   var playing = true
 
@@ -81,7 +81,7 @@ class GameEngine(
       // If first object is a Missile and second is an Asteroid an Explosion should be generated
       if (first.impacts(second)) {
         if ((first.symbol == '^' && second.symbol == '.') ||
-                (first.symbol == '.' && second.symbol == '^')
+          (first.symbol == '.' && second.symbol == '^')
         ) {
           this.field.generateExplosion(second.center)
         } else if (first.symbol != '*' && second.symbol != '*'){

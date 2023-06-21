@@ -12,10 +12,10 @@ import io.javalin.http.Context
 
 class SpaceFieldRouter : Router, Visualizer {
   data class SpaceFieldDTO(
-      val ship: SpaceShip,
-      val asteroids: List<Asteroid>,
-      val missiles: List<Missile>,
-      val explosions: List<Explosion>,
+    val ship: SpaceShip,
+    val asteroids: List<Asteroid>,
+    val missiles: List<Missile>,
+    val explosions: List<Explosion>,
   )
 
   var dto: SpaceFieldDTO? = null
@@ -31,11 +31,11 @@ class SpaceFieldRouter : Router, Visualizer {
 
   override fun renderSpaceField(field: SpaceField) {
     this.dto =
-        SpaceFieldDTO(
-            ship = field.ship,
-            asteroids = field.asteroids,
-            missiles = field.missiles,
-            explosions = field.explosions,
-        )
+      SpaceFieldDTO(
+        ship = field.ship,
+        asteroids = field.asteroids,
+        missiles = field.missiles,
+        explosions = field.explosions,
+      )
   }
 }
