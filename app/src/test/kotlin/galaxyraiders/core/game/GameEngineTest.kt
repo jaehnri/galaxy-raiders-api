@@ -143,6 +143,19 @@ class GameEngineTest {
   }
 
   @Test
+  fun `it does not generate an explosion between an explosion and anything else`() {
+
+    val explosionPos = Point2D(1.0, 1.0)
+    hardGame.field.generateExplosion(explosionPos)
+    hardGame.field.generateExplosion(explosionPos)
+    hardGame.field.generateMissile(explosionPos)
+    hardGame.field.generateAsteroidAtSpecificPos(explosionPos)
+
+    hardGame.handleCollisions()
+    assertEquals(3, hardGame.field.explosions.size)
+  }
+
+  @Test
   fun `it can move its space objects`() {
     hardGame.field.generateAsteroid()
     hardGame.field.generateMissile()

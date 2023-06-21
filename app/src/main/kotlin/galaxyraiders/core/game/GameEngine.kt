@@ -84,7 +84,7 @@ class GameEngine(
                 (first.symbol == '.' && second.symbol == '^')
         ) {
           this.field.generateExplosion(second.center)
-        } else {
+        } else if (first.symbol != '*' && second.symbol != '*'){
           first.collideWith(second, GameEngineConfig.coefficientRestitution)
         }
       }

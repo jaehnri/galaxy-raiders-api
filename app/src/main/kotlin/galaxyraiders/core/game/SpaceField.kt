@@ -68,6 +68,10 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
     this.asteroids += this.createAsteroidWithRandomProperties()
   }
 
+  fun generateAsteroidAtSpecificPos(customPos: Point2D) {
+    this.asteroids += this.createAsteroidAtSpecificPosition(customPos)
+  }
+
   fun generateExplosion(position: Point2D) {
     this.explosions += this.createExplosion(position)
   }
@@ -117,6 +121,15 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
         mass = SpaceFieldConfig.missileMass,
     )
   }
+
+  private fun createAsteroidAtSpecificPosition(pos: Point2D): Asteroid{
+    return Asteroid(
+      initialPosition = pos,
+      initialVelocity = generateRandomAsteroidVelocity(),
+      radius = generateRandomAsteroidRadius(),
+      mass = generateRandomAsteroidMass(),
+      )
+}
 
   private fun defineMissilePosition(missileRadius: Double, customPos: Point2D): Point2D {
 
