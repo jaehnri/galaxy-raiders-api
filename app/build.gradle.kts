@@ -15,6 +15,8 @@ plugins {
   // Apply the application plugin to add support for building a CLI application in Java.
   application
 
+  id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
+
   // Apply the KTLint plugin to check and auto format Kotlin code.
   id("org.jmailen.kotlinter") version "3.10.0"
 
@@ -58,6 +60,12 @@ dependencies {
   // Use Jackson as object serializer for Javalin.
   implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
+
+  // Use kotlinx.serialization for JSON parsing.
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
+  // Use kotlin datetime for Instant serializer.
+  implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
   // Use the Kotlin JUnit 5 integration.
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.6.21")
