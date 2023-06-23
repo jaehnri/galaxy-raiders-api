@@ -5,6 +5,11 @@ import galaxyraiders.adapters.BasicRandomGenerator
 import galaxyraiders.adapters.tui.TextUserInterface
 import galaxyraiders.adapters.web.WebUserInterface
 import galaxyraiders.core.game.GameEngine
+import galaxyraiders.core.score.Score
+import galaxyraiders.core.score.ScoreManager
+import galaxyraiders.core.score.ScoreWriterJSON
+import galaxyraiders.core.score.SimpleScoreCalculator
+import kotlinx.datetime.Clock
 import kotlin.concurrent.thread
 import kotlin.random.Random
 
@@ -12,6 +17,8 @@ object AppConfig {
   val config = Config("GR__APP__")
 
   val randomSeed = config.get<Int>("RANDOM_SEED")
+  val scoreboardFile = config.get<String>("SCOREBOARD_FILE")
+  val leaderboardFile = config.get<String>("LEADERBOARD_FILE")
   val operationMode = config.get<OperationMode>("OPERATION_MODE")
 }
 
@@ -25,12 +32,24 @@ fun main() {
     OperationMode.Web -> WebUserInterface()
   }
 
+  val scoreManager = ScoreManager(
+    score = Score(
+      startTime = Clock.System.now(),
+      endTime = null,
+      points = 0.0,
+      destroyedAsteroids = 0
+    ),
+    scoreboardFile = AppConfig.scoreboardFile,
+    leaderboardFile = AppConfig.leaderboardFile,
+    scoreWriter = ScoreWriterJSON(),
+    scoreCalculator = SimpleScoreCalculator()
+  )
+
   val (controller, visualizer) = ui.build()
 
   val gameEngine = GameEngine(
-    generator, controller, visualizer
+    generator, controller, visualizer, scoreManager
   )
-
   thread { gameEngine.execute() }
 
   ui.start()

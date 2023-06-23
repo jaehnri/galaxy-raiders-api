@@ -1,6 +1,7 @@
 package galaxyraiders.core.game
 
 import galaxyraiders.Config
+import galaxyraiders.core.score.ScoreManager
 import galaxyraiders.ports.RandomGenerator
 import galaxyraiders.ports.ui.Controller
 import galaxyraiders.ports.ui.Controller.PlayerCommand
@@ -26,6 +27,7 @@ class GameEngine(
   val generator: RandomGenerator,
   val controller: Controller,
   val visualizer: Visualizer,
+  private val scoreManager: ScoreManager,
 ) {
   val field =
     SpaceField(
@@ -77,18 +79,31 @@ class GameEngine(
 
   fun handleCollisions() {
     this.field.spaceObjects.forEachPair { (first, second) ->
-
-      // If first object is a Missile and second is an Asteroid an Explosion should be generated
       if (first.impacts(second)) {
-        if ((first.symbol == '^' && second.symbol == '.') ||
-          (first.symbol == '.' && second.symbol == '^')
-        ) {
-          this.field.generateExplosion(second.center)
-        } else if (first.symbol != '*' && second.symbol != '*'){
+        if (notExplosion(first) && notExplosion(second)) {
           first.collideWith(second, GameEngineConfig.coefficientRestitution)
+        }
+
+        if (isMissileAndAsteroid(first, second)) {
+          val asteroid = first as? Asteroid ?: second as Asteroid
+          // TODO: Asteroid should be actually removed from the space field
+          this.field.generateExplosion(second.center)
+          scoreManager.addDestroyedAsteroid(asteroid)
+          scoreManager.updateRankings()
         }
       }
     }
+  }
+
+  private fun notExplosion(spaceObject: SpaceObject): Boolean {
+    return spaceObject !is Explosion
+  }
+
+  private fun isMissileAndAsteroid(first: SpaceObject, second: SpaceObject): Boolean {
+    val asteroid = first as? Asteroid ?: second as? Asteroid
+    val missile = first as? Missile ?: second as? Missile
+
+    return asteroid != null && missile != null
   }
 
   fun moveSpaceObjects() {
