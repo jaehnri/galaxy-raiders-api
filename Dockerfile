@@ -59,4 +59,4 @@ COPY --from=builder ${APP_DIR}/app/build/libs/galaxy-raiders.jar \
                     /bin/runner/galaxy-raiders.jar
 
 # Run uber JAR to start application
-CMD ["java", "-jar", "galaxy-raiders.jar"]
+CMD ["java", "-jar", "/bin/runner/galaxy-raiders.jar"]
