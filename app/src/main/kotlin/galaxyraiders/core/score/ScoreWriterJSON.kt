@@ -49,7 +49,7 @@ class ScoreWriterJSON : ScoreWriter {
 
     if (!file.exists()) {
       file.createNewFile()
-      println("Created file: ${file.absolutePath}" )
+      println("Created file: ${file.absolutePath}")
     }
 
     return file

@@ -122,14 +122,14 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
     )
   }
 
-  private fun createAsteroidAtSpecificPosition(pos: Point2D): Asteroid{
+  private fun createAsteroidAtSpecificPosition(pos: Point2D): Asteroid {
     return Asteroid(
       initialPosition = pos,
       initialVelocity = generateRandomAsteroidVelocity(),
       radius = generateRandomAsteroidRadius(),
       mass = generateRandomAsteroidMass(),
-      )
-}
+    )
+  }
 
   private fun defineMissilePosition(missileRadius: Double, customPos: Point2D): Point2D {
 

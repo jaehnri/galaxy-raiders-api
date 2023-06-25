@@ -102,9 +102,9 @@ fun createScoreManager(): ScoreManager {
       points = 0.0,
       destroyedAsteroids = 0
     ),
-  scoreboardFile = AppConfig.scoreboardFile,
-  leaderboardFile = AppConfig.leaderboardFile,
-  scoreWriter = ScoreWriterJSON(),
-  scoreCalculator = SimpleScoreCalculator()
+    scoreboardFile = AppConfig.scoreboardFile,
+    leaderboardFile = AppConfig.leaderboardFile,
+    scoreWriter = ScoreWriterJSON(),
+    scoreCalculator = SimpleScoreCalculator()
   )
 }

@@ -86,7 +86,7 @@ class GameEngine(
 
         if (isMissileAndAsteroid(first, second)) {
           val asteroid = first as? Asteroid ?: second as Asteroid
-          // TODO: Asteroid should be actually removed from the space field
+
           this.field.generateExplosion(second.center)
           scoreManager.addDestroyedAsteroid(asteroid)
           scoreManager.updateRankings()

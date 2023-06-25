@@ -78,6 +78,6 @@ class LeaderboardTest {
     leaderboard.update(middleScore)
     leaderboard.update(highestScore)
     leaderboard.update(lowestScore)
-    assertEquals(mutableListOf(highestScore, middleScore, lowestScore),  leaderboard.scores)
+    assertEquals(mutableListOf(highestScore, middleScore, lowestScore), leaderboard.scores)
   }
 }
