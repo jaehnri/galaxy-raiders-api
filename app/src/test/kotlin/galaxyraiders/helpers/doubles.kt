@@ -13,6 +13,7 @@ import galaxyraiders.ports.ui.Visualizer
 import kotlinx.datetime.Clock
 import java.util.LinkedList
 import java.util.Queue
+import java.util.UUID
 import kotlin.math.roundToInt
 
 class MinValueGeneratorStub : RandomGenerator {
@@ -97,6 +98,7 @@ class ControllerSpy : Controller {
 fun createScoreManager(): ScoreManager {
   return ScoreManager(
     score = Score(
+      id = UUID.randomUUID(),
       startTime = Clock.System.now(),
       endTime = null,
       points = 0.0,

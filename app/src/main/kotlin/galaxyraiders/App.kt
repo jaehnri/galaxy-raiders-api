@@ -10,6 +10,7 @@ import galaxyraiders.core.score.ScoreManager
 import galaxyraiders.core.score.ScoreWriterJSON
 import galaxyraiders.core.score.SimpleScoreCalculator
 import kotlinx.datetime.Clock
+import java.util.UUID
 import kotlin.concurrent.thread
 import kotlin.random.Random
 
@@ -34,6 +35,7 @@ fun main() {
 
   val scoreManager = ScoreManager(
     score = Score(
+      id = UUID.randomUUID(),
       startTime = Clock.System.now(),
       endTime = null,
       points = 0.0,

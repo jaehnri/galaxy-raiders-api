@@ -17,7 +17,14 @@ data class Leaderboard(
   }
 
   fun update(newScore: Score) {
-    scores.add(newScore)
+    // Make adding score to leaderboard idempotent. Only saves the best score of a game.
+    val existingScoreIndex = scores.indexOfFirst { it.id == newScore.id }
+    if (existingScoreIndex != -1) {
+      scores[existingScoreIndex] = newScore
+    } else {
+      scores.add(newScore)
+    }
+
     scores = scores.sortedByDescending { it.points }.take(LeaderboardConfig.LEADERBOARD_SIZE).toMutableList()
     this.lastUpdated = Clock.System.now()
   }

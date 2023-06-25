@@ -2,6 +2,7 @@ package galaxyraiders.core.score
 
 import kotlinx.datetime.Instant
 import org.junit.jupiter.api.Test
+import java.util.UUID
 import kotlin.test.assertEquals
 
 class ScoreWriterJSONTest {
@@ -12,6 +13,7 @@ class ScoreWriterJSONTest {
   @Test
   fun `read non existent leaderboard should return empty leaderboard`() {
     Score(
+      id = UUID.randomUUID(),
       points = 0.0,
       destroyedAsteroids = 0,
       startTime = Instant.DISTANT_PAST,
