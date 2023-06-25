@@ -6,6 +6,7 @@ import galaxyraiders.helpers.ControllerSpy
 import galaxyraiders.helpers.MaxValueGeneratorStub
 import galaxyraiders.helpers.MinValueGeneratorStub
 import galaxyraiders.helpers.VisualizerSpy
+import galaxyraiders.helpers.createScoreManager
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -21,12 +22,14 @@ class GameEngineTest {
   private val minGenerator = MinValueGeneratorStub()
   private val controllerSpy = ControllerSpy()
   private val visualizerSpy = VisualizerSpy()
+  private val scoreManager = createScoreManager()
 
   private val normalGame =
     GameEngine(
       generator = avgGenerator,
       controller = controllerSpy,
       visualizer = visualizerSpy,
+      scoreManager = scoreManager
     )
 
   private val easyGame =
@@ -34,6 +37,7 @@ class GameEngineTest {
       generator = maxGenerator,
       controller = controllerSpy,
       visualizer = visualizerSpy,
+      scoreManager = scoreManager
     )
 
   private val hardGame =
@@ -41,6 +45,7 @@ class GameEngineTest {
       generator = minGenerator,
       controller = controllerSpy,
       visualizer = visualizerSpy,
+      scoreManager = scoreManager
     )
 
   @Test
@@ -140,6 +145,30 @@ class GameEngineTest {
     hardGame.handleCollisions()
 
     assertEquals(1, hardGame.field.explosions.size)
+  }
+
+  @Test
+  fun `it adds a destroyed asteroid when a missile collides with an asteroid`() {
+    hardGame.generateAsteroids()
+
+    val asteroid = hardGame.field.asteroids.last()
+    hardGame.field.generateMissile(Point2D(asteroid.center.x, asteroid.center.y))
+
+    assertEquals(0, scoreManager.score.destroyedAsteroids)
+    hardGame.handleCollisions()
+    assertEquals(1, scoreManager.score.destroyedAsteroids)
+  }
+
+  @Test
+  fun `it increases points when asteroid is destroyed`() {
+    hardGame.generateAsteroids()
+
+    val asteroid = hardGame.field.asteroids.last()
+    hardGame.field.generateMissile(Point2D(asteroid.center.x, asteroid.center.y))
+
+    assertEquals(0.0, scoreManager.score.points)
+    hardGame.handleCollisions()
+    assertEquals(asteroid.mass * asteroid.radius, scoreManager.score.points)
   }
 
   @Test

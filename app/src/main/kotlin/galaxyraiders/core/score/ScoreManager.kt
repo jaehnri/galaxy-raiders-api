@@ -4,7 +4,7 @@ import galaxyraiders.core.game.Asteroid
 import kotlinx.datetime.Clock
 
 class ScoreManager(
-  private var score: Score,
+  var score: Score,
   private val scoreboardFile: String,
   private val leaderboardFile: String,
   private val scoreWriter: ScoreWriter,

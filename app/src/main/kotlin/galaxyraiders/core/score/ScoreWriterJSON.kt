@@ -1,6 +1,6 @@
 package galaxyraiders.core.score
 
-import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -30,7 +30,7 @@ class ScoreWriterJSON : ScoreWriter {
     val file = File(filepath)
     if (!file.exists()) {
       println("Leaderboard file does not exist. Creating new leaderboard.")
-      return Leaderboard(Clock.System.now(), mutableListOf())
+      return Leaderboard(Instant.DISTANT_PAST, mutableListOf())
     }
 
     val fileContent = file.readText()

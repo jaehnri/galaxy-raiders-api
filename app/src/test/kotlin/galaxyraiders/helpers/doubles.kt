@@ -1,10 +1,16 @@
 package galaxyraiders.helpers
 
+import galaxyraiders.AppConfig
 import galaxyraiders.core.game.SpaceField
+import galaxyraiders.core.score.Score
+import galaxyraiders.core.score.ScoreManager
+import galaxyraiders.core.score.ScoreWriterJSON
+import galaxyraiders.core.score.SimpleScoreCalculator
 import galaxyraiders.ports.RandomGenerator
 import galaxyraiders.ports.ui.Controller
 import galaxyraiders.ports.ui.Controller.PlayerCommand
 import galaxyraiders.ports.ui.Visualizer
+import kotlinx.datetime.Clock
 import java.util.LinkedList
 import java.util.Queue
 import kotlin.math.roundToInt
@@ -86,4 +92,19 @@ class ControllerSpy : Controller {
     if (playerCommands.isEmpty()) return null
     return playerCommands.remove()
   }
+}
+
+fun createScoreManager(): ScoreManager {
+  return ScoreManager(
+    score = Score(
+      startTime = Clock.System.now(),
+      endTime = null,
+      points = 0.0,
+      destroyedAsteroids = 0
+    ),
+  scoreboardFile = AppConfig.scoreboardFile,
+  leaderboardFile = AppConfig.leaderboardFile,
+  scoreWriter = ScoreWriterJSON(),
+  scoreCalculator = SimpleScoreCalculator()
+  )
 }
