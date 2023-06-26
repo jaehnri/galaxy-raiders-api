@@ -87,7 +87,7 @@ class GameEngine(
         if (isMissileAndAsteroid(first, second)) {
           val asteroid = first as? Asteroid ?: second as Asteroid
 
-          this.field.generateExplosion(second.center)
+          this.field.generateExplosion(asteroid.center)
           scoreManager.addDestroyedAsteroid(asteroid)
           scoreManager.updateRankings()
         }
