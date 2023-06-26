@@ -24,7 +24,14 @@ class ScoreManager(
 
   private fun updateScoreboard() {
     val scoreboard = scoreWriter.readScoreboard(scoreboardFile).toMutableList()
-    scoreboard.add(score)
+
+    // Make adding score to scoreboard idempotent. Only saves the best score of a game.
+    val existingScoreIndex = scoreboard.indexOfFirst { it.id == score.id }
+    if (existingScoreIndex != -1) {
+      scoreboard[existingScoreIndex] = score
+    } else {
+      scoreboard.add(score)
+    }
 
     scoreWriter.writeScoreboard(scoreboardFile, scoreboard)
   }
